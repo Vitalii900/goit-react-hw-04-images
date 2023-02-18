@@ -61,9 +61,9 @@ export class App extends Component {
     this.setState({ filter: findLargePhoto[0].largeImageURL });
   };
 
-  formSubmitHandler = data => {
+  formSubmitHandler = name => {
     this.setState({
-      searchName: data.name,
+      searchName: name,
     });
   };
 

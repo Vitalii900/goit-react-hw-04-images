@@ -1,39 +1,41 @@
 import '../Modal/Modal.css';
-import { Component } from 'react';
+import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 
 const modalRoot = document.querySelector('#modal-root');
 
-export class Modal extends Component {
-  componentDidMount() {
-    window.addEventListener('keydown', this.closeModal);
-    window.addEventListener('click', this.closeModal);
-  }
+export const Modal = ({ reset, image, onClose }) => {
+  useEffect(() => {
+    // console.log('mount');
+    window.addEventListener('keydown', closeModal);
+    window.addEventListener('click', closeModal);
+  }, []);
 
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.closeModal);
-    window.removeEventListener('click', this.closeModal);
-  }
+  useEffect(() => {
+    return () => {
+      // console.log('unmount');
+      window.removeEventListener('keydown', closeModal);
+      window.removeEventListener('click', closeModal);
+    };
+  }, []);
 
-  closeModal = (event) => {
+  const closeModal = event => {
     if (event.code === 'Escape' || event.target.nodeName !== 'IMG') {
-      this.props.onClose();
-      this.props.reset();
+      onClose();
+      reset();
     }
-  }
+  };
 
-  render() {
-    return createPortal(
-      <div className="overlay">
-        <div className="modal">
-          <img className="largeImage" src={this.props.image} alt="" />
-        </div>
-      </div>,
-      modalRoot
-    );
-  }
-}
+  return createPortal(
+    <div className="overlay">
+      <div className="modal">
+        <img className="largeImage" src={image} alt="" />
+      </div>
+    </div>,
+    modalRoot
+  );
+};
 
 Modal.propTypes = {
   onClose: PropTypes.func,

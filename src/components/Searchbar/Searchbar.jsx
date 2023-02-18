@@ -1,35 +1,28 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { BsSearch } from 'react-icons/bs';
 import '../Searchbar/Searchbar.css';
 import PropTypes from 'prop-types';
 
-export class Searchbar extends Component {
-  state = {
-    name: '',
+export const Searchbar = ({onSubmit}) => {
+  const [name, setName] = useState('')
+
+  const handleInputChange = event => {
+    setName(event.currentTarget.value);
   };
 
-  handleInputChange = event => {
-    const { name, value } = event.currentTarget;
-    this.setState({ [name]: value });
-  };
-
-  sendData = async event => {
+  const sendData = async event => {
     event.preventDefault();
-    this.props.onSubmit(this.state);
-    this.reset();
+    onSubmit(name);
+    reset();
   };
 
-  reset = () => {
-    this.setState({
-      name: '',
-    });
+  const reset = () => {
+    setName('')
   };
 
-  render() {
-    const { name } = this.state;
     return (
       <header className="searchbar">
-        <form className="searchForm" onSubmit={this.sendData}>
+        <form className="searchForm" onSubmit={sendData}>
           <button type="submit" className="searchForm-button">
             <span className="button-label">
               <BsSearch />
@@ -37,7 +30,7 @@ export class Searchbar extends Component {
           </button>
 
           <input
-            onChange={this.handleInputChange}
+            onChange={handleInputChange}
             value={name}
             className="input"
             type="text"
@@ -49,7 +42,6 @@ export class Searchbar extends Component {
         </form>
       </header>
     );
-  }
 }
 
 Searchbar.propTypes = {

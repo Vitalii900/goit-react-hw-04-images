@@ -1,7 +1,11 @@
 import '../ImageGalleryItem/ImageGalleryItem.css';
 import PropTypes from 'prop-types';
 
-export function ImageGalleryItem({ webformatURL, largeImageURL, onImageClick }) {
+export function ImageGalleryItem({
+  webformatURL,
+  largeImageURL,
+  onImageClick,
+}) {
   return (
     <li
       onClick={() => onImageClick(largeImageURL)}
