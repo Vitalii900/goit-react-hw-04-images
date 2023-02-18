@@ -9,17 +9,14 @@ export const Modal = ({ reset, image, onClose }) => {
   useEffect(() => {
     const closeModal = event => {
       if (event.code === 'Escape' || event.target.nodeName !== 'IMG') {
-        // console.log(event.code);
         onClose();
         reset();
       }
     };
-    // console.log('mount');
     window.addEventListener('keydown', closeModal);
     window.addEventListener('click', closeModal);
 
     return () => {
-      // console.log('unmount');
       window.removeEventListener('keydown', closeModal);
       window.removeEventListener('click', closeModal);
     };

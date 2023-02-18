@@ -10,7 +10,7 @@ export const Searchbar = ({onSubmit}) => {
     setName(event.currentTarget.value);
   };
 
-  const sendData = async event => {
+  const sendData = event => {
     event.preventDefault();
     onSubmit(name);
     reset();
