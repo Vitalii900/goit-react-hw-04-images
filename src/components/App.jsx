@@ -43,16 +43,16 @@ export const App = () => {
     }
     setArrayOfPhoto([]);
     setPage(1);
-    addResponseToState(searchName, page);
+    addResponseToState(searchName);
     console.log('API');
     // ==================================
   }, [searchName]);
 
-  // useEffect(() => {
-  //   addResponseToState(searchName, page);
-  // }, [page]);
+  useEffect(() => {
+    addResponseToState(searchName, page);
+  }, [page, searchName]);
 
-  const addResponseToState = async (value, page) => {
+  const addResponseToState = async (value, page = 1) => {
     setIsLoading(true);
     // this.setState({ isLoading: true });
     const { hits, totalHits } = await getPhotoFromServer(value, page);

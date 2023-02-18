@@ -7,6 +7,13 @@ const modalRoot = document.querySelector('#modal-root');
 
 export const Modal = ({ reset, image, onClose }) => {
   useEffect(() => {
+    const closeModal = event => {
+      if (event.code === 'Escape' || event.target.nodeName !== 'IMG') {
+        // console.log(event.code);
+        onClose();
+        reset();
+      }
+    };
     // console.log('mount');
     window.addEventListener('keydown', closeModal);
     window.addEventListener('click', closeModal);
@@ -16,15 +23,9 @@ export const Modal = ({ reset, image, onClose }) => {
       window.removeEventListener('keydown', closeModal);
       window.removeEventListener('click', closeModal);
     };
-  }, []);
+  }, [onClose, reset]);
 
-  const closeModal = event => {
-    if (event.code === 'Escape' || event.target.nodeName !== 'IMG') {
-      // console.log(event.code);
-      onClose();
-      reset();
-    }
-  };
+
 
   return createPortal(
     <div className="overlay">
