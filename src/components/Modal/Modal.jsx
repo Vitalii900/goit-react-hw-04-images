@@ -20,6 +20,7 @@ export const Modal = ({ reset, image, onClose }) => {
 
   const closeModal = event => {
     if (event.code === 'Escape' || event.target.nodeName !== 'IMG') {
+      // console.log(event.code);
       onClose();
       reset();
     }

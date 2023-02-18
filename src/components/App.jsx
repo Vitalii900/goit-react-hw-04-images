@@ -52,17 +52,6 @@ export const App = () => {
   //   addResponseToState(searchName, page);
   // }, [page]);
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   const { searchName, page } = this.state;
-  //   if (searchName !== prevState.searchName) {
-  //     this.setState({ arrayOfPhoto: [], page: 1 });
-  //     this.addResponseToState(searchName, page);
-  //   }
-  //   if (page !== prevState.page) {
-  //     this.addResponseToState(searchName, page);
-  //   }
-  // }
-
   const addResponseToState = async (value, page) => {
     setIsLoading(true);
     // this.setState({ isLoading: true });
