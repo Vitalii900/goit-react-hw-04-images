@@ -44,12 +44,13 @@ export const App = () => {
     setArrayOfPhoto([]);
     setPage(1);
     addResponseToState(searchName, page);
+    console.log('API');
     // ==================================
   }, [searchName]);
 
-  useEffect(() => {
-    addResponseToState(searchName, page);
-  }, [page]);
+  // useEffect(() => {
+  //   addResponseToState(searchName, page);
+  // }, [page]);
 
   // componentDidUpdate(prevProps, prevState) {
   //   const { searchName, page } = this.state;
