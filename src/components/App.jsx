@@ -4,7 +4,7 @@ import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Button } from './Button/Button';
 import { Loader } from './Loader/Loader';
 import { Modal } from './Modal/Modal';
-import '../components/App.css'
+import '../components/App.css';
 import getPhotoFromServer from './API';
 
 export const App = () => {
@@ -25,25 +25,26 @@ export const App = () => {
   const [showModal, setShowModal] = useState(false);
   const [filter, setFilter] = useState(null);
 
-  // const notInitialRender = useRef(false);
+  const skipFirstRender = useRef(true);
 
   useEffect(() => {
-    if (searchName === null) {
+    // if (searchName === null) {
+    //   console.log('return');
+    //   return;
+    // }
+    // setArrayOfPhoto([]);
+    // setPage(1);
+    // addResponseToState(searchName, page);
+    // ====================================
+    if (skipFirstRender.current) {
+      skipFirstRender.current = false;
       console.log('return');
       return;
     }
     setArrayOfPhoto([]);
     setPage(1);
     addResponseToState(searchName, page);
-    // if (notInitialRender.current) {
-    //   console.log('render API')
-    //   setArrayOfPhoto([]);
-    //   setPage(1);
-    //   addResponseToState(searchName, page);
-    // } else {
-    //   console.log('render else');
-    //   notInitialRender.current = true;
-    // }
+    // ==================================
   }, [searchName]);
 
   useEffect(() => {
@@ -65,8 +66,8 @@ export const App = () => {
     setIsLoading(true);
     // this.setState({ isLoading: true });
     const { hits, totalHits } = await getPhotoFromServer(value, page);
-    setArrayOfPhoto((state) => {
-      return [...state, ...hits]
+    setArrayOfPhoto(state => {
+      return [...state, ...hits];
     });
     setIsLoading(false);
     setTotal(totalHits);
@@ -78,16 +79,18 @@ export const App = () => {
   };
 
   const loadMore = () => {
-    setPage((state) => {return state + 1});
-  }
+    setPage(state => {
+      return state + 1;
+    });
+  };
 
   const toggleModal = () => {
-    setShowModal(!showModal)
+    setShowModal(!showModal);
     // this.setState(({ showModal }) => ({ showModal: !showModal }));
   };
 
   const reset = () => {
-    setFilter(null)
+    setFilter(null);
   };
 
   const onImageClick = largeImage => {
@@ -95,33 +98,31 @@ export const App = () => {
     const findLargePhoto = arrayOfPhoto.filter(
       photo => photo.largeImageURL === largeImage
     );
-    setFilter(findLargePhoto[0].largeImageURL)
+    setFilter(findLargePhoto[0].largeImageURL);
     // this.setState({ filter: findLargePhoto[0].largeImageURL });
   };
 
   const formSubmitHandler = name => {
-    setSearchName(name)
+    setSearchName(name);
     // this.setState({
     //   searchName: name,
     // });
   };
 
-    return (
-      <div className="container">
-        <Searchbar onSubmit={formSubmitHandler}></Searchbar>
-        <ImageGallery
-          onImageClick={onImageClick}
-          images={arrayOfPhoto}
-        ></ImageGallery>
-        {showModal && (
-          <Modal
-            reset={reset}
-            onClose={toggleModal}
-            image={filter}
-          ></Modal>
-        )}
-        {arrayOfPhoto.length !== 0 && isLoading === false && arrayOfPhoto.length < total && <Button loadMore={loadMore}></Button>}
-        {isLoading && <Loader></Loader>}
-      </div>
-    );
-}
+  return (
+    <div className="container">
+      <Searchbar onSubmit={formSubmitHandler}></Searchbar>
+      <ImageGallery
+        onImageClick={onImageClick}
+        images={arrayOfPhoto}
+      ></ImageGallery>
+      {showModal && (
+        <Modal reset={reset} onClose={toggleModal} image={filter}></Modal>
+      )}
+      {arrayOfPhoto.length !== 0 &&
+        isLoading === false &&
+        arrayOfPhoto.length < total && <Button loadMore={loadMore}></Button>}
+      {isLoading && <Loader></Loader>}
+    </div>
+  );
+};
