@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Button } from './Button/Button';
@@ -7,85 +7,121 @@ import { Modal } from './Modal/Modal';
 import '../components/App.css'
 import getPhotoFromServer from './API';
 
-export class App extends Component {
-  state = {
-    page: 1,
-    total: null,
-    searchName: null,
-    arrayOfPhoto: [],
-    isLoading: false,
-    showModal: false,
-    filter: null,
-  };
+export const App = () => {
+  // state = {
+  //   page: 1,
+  //   total: null,
+  //   searchName: null,
+  //   arrayOfPhoto: [],
+  //   isLoading: false,
+  //   showModal: false,
+  //   filter: null,
+  // };
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(null);
+  const [searchName, setSearchName] = useState(null);
+  const [arrayOfPhoto, setArrayOfPhoto] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [filter, setFilter] = useState(null);
 
-  componentDidUpdate(prevProps, prevState) {
-    const { searchName, page } = this.state;
-    if (searchName !== prevState.searchName) {
-      this.setState({ arrayOfPhoto: [], page: 1 });
-      this.addResponseToState(searchName, page);
-    }
-    if (page !== prevState.page) {
-      this.addResponseToState(searchName, page);
-    }
-  }
+  // const notInitialRender = useRef(false);
 
-  addResponseToState = async (value, page) => {
-    this.setState({ isLoading: true });
+  useEffect(() => {
+    if (searchName === null) {
+      console.log('return');
+      return;
+    }
+    setArrayOfPhoto([]);
+    setPage(1);
+    addResponseToState(searchName, page);
+    // if (notInitialRender.current) {
+    //   console.log('render API')
+    //   setArrayOfPhoto([]);
+    //   setPage(1);
+    //   addResponseToState(searchName, page);
+    // } else {
+    //   console.log('render else');
+    //   notInitialRender.current = true;
+    // }
+  }, [searchName]);
+
+  useEffect(() => {
+    addResponseToState(searchName, page);
+  }, [page]);
+
+  // componentDidUpdate(prevProps, prevState) {
+  //   const { searchName, page } = this.state;
+  //   if (searchName !== prevState.searchName) {
+  //     this.setState({ arrayOfPhoto: [], page: 1 });
+  //     this.addResponseToState(searchName, page);
+  //   }
+  //   if (page !== prevState.page) {
+  //     this.addResponseToState(searchName, page);
+  //   }
+  // }
+
+  const addResponseToState = async (value, page) => {
+    setIsLoading(true);
+    // this.setState({ isLoading: true });
     const { hits, totalHits } = await getPhotoFromServer(value, page);
-    this.setState(prevProps => ({
-      arrayOfPhoto: [...prevProps.arrayOfPhoto, ...hits],
-      isLoading: false,
-      total: totalHits,
-    }));
+    setArrayOfPhoto((state) => {
+      return [...state, ...hits]
+    });
+    setIsLoading(false);
+    setTotal(totalHits);
+    // this.setState(prevProps => ({
+    //   arrayOfPhoto: [...prevProps.arrayOfPhoto, ...hits],
+    //   isLoading: false,
+    //   total: totalHits,
+    // }));
   };
 
-  loadMore = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
+  const loadMore = () => {
+    setPage((state) => {return state + 1});
   }
 
-  toggleModal = () => {
-    this.setState(({ showModal }) => ({ showModal: !showModal }));
+  const toggleModal = () => {
+    setShowModal(!showModal)
+    // this.setState(({ showModal }) => ({ showModal: !showModal }));
   };
 
-  reset = () => {
-    this.setState(({ filter }) => ({ filter: null }));
+  const reset = () => {
+    setFilter(null)
   };
 
-  onImageClick = largeImage => {
-    this.toggleModal();
-    const findLargePhoto = this.state.arrayOfPhoto.filter(
+  const onImageClick = largeImage => {
+    toggleModal();
+    const findLargePhoto = arrayOfPhoto.filter(
       photo => photo.largeImageURL === largeImage
     );
-    this.setState({ filter: findLargePhoto[0].largeImageURL });
+    setFilter(findLargePhoto[0].largeImageURL)
+    // this.setState({ filter: findLargePhoto[0].largeImageURL });
   };
 
-  formSubmitHandler = name => {
-    this.setState({
-      searchName: name,
-    });
+  const formSubmitHandler = name => {
+    setSearchName(name)
+    // this.setState({
+    //   searchName: name,
+    // });
   };
 
-  render() {
-    const { arrayOfPhoto, isLoading, showModal, filter, total } = this.state;
     return (
       <div className="container">
-        <Searchbar onSubmit={this.formSubmitHandler}></Searchbar>
+        <Searchbar onSubmit={formSubmitHandler}></Searchbar>
         <ImageGallery
-          onImageClick={this.onImageClick}
+          onImageClick={onImageClick}
           images={arrayOfPhoto}
         ></ImageGallery>
         {showModal && (
           <Modal
-            reset={this.reset}
-            onClose={this.toggleModal}
+            reset={reset}
+            onClose={toggleModal}
             image={filter}
           ></Modal>
         )}
-        {arrayOfPhoto.length !== 0 && isLoading === false && arrayOfPhoto.length < total && <Button loadMore={this.loadMore}></Button>}
+        {arrayOfPhoto.length !== 0 && isLoading === false && arrayOfPhoto.length < total && <Button loadMore={loadMore}></Button>}
         {isLoading && <Loader></Loader>}
       </div>
     );
-  }
 }

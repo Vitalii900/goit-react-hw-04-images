@@ -10,9 +10,7 @@ export const Modal = ({ reset, image, onClose }) => {
     // console.log('mount');
     window.addEventListener('keydown', closeModal);
     window.addEventListener('click', closeModal);
-  }, []);
 
-  useEffect(() => {
     return () => {
       // console.log('unmount');
       window.removeEventListener('keydown', closeModal);
