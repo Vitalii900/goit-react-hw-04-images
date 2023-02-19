@@ -16,29 +16,6 @@ export const App = () => {
   const [showModal, setShowModal] = useState(false);
   const [filter, setFilter] = useState(null);
 
-  // const skipFirstRender = useRef(true);
-
-  // useEffect(() => {
-  //   // if (searchName === null) {
-  //   //   console.log('return');
-  //   //   return;
-  //   // }
-  //   // setArrayOfPhoto([]);
-  //   // setPage(1);
-  //   // addResponseToState(searchName, page);
-  //   // ====================================
-  //   if (skipFirstRender.current) {
-  //     skipFirstRender.current = false;
-  //     console.log('return');
-  //     return;
-  //   }
-  //   setArrayOfPhoto([]);
-  //   setPage(1);
-  //   addResponseToState(searchName);
-  //   console.log('API');
-  //   // ==================================
-  // }, [searchName]);
-
   useEffect(() => {
     if (!searchName) {
       return;

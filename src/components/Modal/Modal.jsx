@@ -8,6 +8,7 @@ const modalRoot = document.querySelector('#modal-root');
 export const Modal = ({ reset, image, onClose }) => {
   useEffect(() => {
     const closeModal = event => {
+      console.log(event.code);
       if (event.code === 'Escape' || event.target.nodeName !== 'IMG') {
         onClose();
         reset();
